@@ -23,7 +23,7 @@ fun main() {
                 when {
                     selectedArchiveIndex < 0 -> {
                         println("Введите название архива")
-                        val name = scanner.nextLine()
+                        val name : String? = scanner.nextLine()
                         archiveList.add(Archive(name, mutableListOf()))
                         menuState = MenuState.ARCHIVE
                         continue
@@ -31,9 +31,9 @@ fun main() {
 
                     else -> {
                         println("Введите имя записки")
-                        val name = scanner.nextLine()
+                        val name : String? = scanner.nextLine()
                         println("Введите текст записки")
-                        val body =scanner.nextLine()
+                        val body : String? =scanner.nextLine()
                         archiveList[selectedArchiveIndex].notes.add(Note(name, body))
                         menuState = MenuState.NOTES
                         continue
@@ -41,31 +41,36 @@ fun main() {
                 }
             }
         }
-        val selectedIndex = scanner.nextLine().toInt()
-        when {
-            selectedIndex == 0 -> menuState = MenuState.CREATE
-            selectedIndex < menu.menuItems.lastIndex-> {
-                when (menuState) {
-                    MenuState.ARCHIVE -> {
-                        selectedArchiveIndex = selectedIndex - 1
-                        menuState = MenuState.NOTES
+
+        try {
+            val selectedIndex = scanner.nextLine().toInt()
+            when {
+                selectedIndex == 0 -> menuState = MenuState.CREATE
+                selectedIndex < menu.menuItems.lastIndex-> {
+                    when (menuState) {
+                        MenuState.ARCHIVE -> {
+                            selectedArchiveIndex = selectedIndex - 1
+                            menuState = MenuState.NOTES
+                        }
+
+                        MenuState.NOTES -> {
+                            selectedNoteIndex = selectedIndex - 1
+                            menuState = MenuState.VIEW
+                        }
+
+                        else -> {/* do nothing */}
                     }
+                }
 
-                    MenuState.NOTES -> {
-                        selectedNoteIndex = selectedIndex - 1
-                        menuState = MenuState.VIEW
+                selectedIndex == menu.menuItems.lastIndex -> {
+                    when(menuState) {
+                        MenuState.NOTES -> menuState = MenuState.ARCHIVE
+                        else -> return
                     }
-
-                    else -> {/*do nothing*/}
                 }
+                selectedIndex > menu.menuItems.lastIndex -> {println("Введено неверное числовое значение. Выберете один из предложенных пунктов.")}
             }
+        } catch (e : NumberFormatException) {println("Введено нечисловое значение. Введите число.")}
 
-            selectedIndex == menu.menuItems.lastIndex -> {
-                when(menuState) {
-                    MenuState.NOTES -> menuState = MenuState.ARCHIVE
-                    else -> return
-                }
-            }
-        }
     }
 }

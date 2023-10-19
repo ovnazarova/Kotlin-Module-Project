@@ -1,2 +1,2 @@
-class ArchiveMenuItem(val title : String) {
+class ArchiveMenuItem(val title : String?) {
 }

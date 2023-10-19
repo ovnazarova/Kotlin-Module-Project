@@ -1,3 +1,3 @@
 interface File {
-    val name: String
+    val name: String?
 }
